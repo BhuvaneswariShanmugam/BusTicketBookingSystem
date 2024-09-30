@@ -2,10 +2,10 @@ package com.app.booking_system.service;
 
 import com.app.booking_system.config.TokenProvider;
 import com.app.booking_system.dto.*;
-import com.app.booking_system.entity.Users;
+import com.app.booking_system.entity.UsersCredential;
 import com.app.booking_system.exception.EmailNotFormattedException;
 import com.app.booking_system.exception.InvaildPasswordException;
-import com.app.booking_system.repository.UsersRepository;
+import com.app.booking_system.repository.UsersCredentialRepository;
 import com.app.booking_system.util.Constants;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,16 +21,16 @@ import java.util.regex.Pattern;
 
 
 @Service
-public class UsersService implements  UserDetailsService {
+public class UsersCredentialService implements  UserDetailsService {
 
-    private final UsersRepository userRepository;
+    private final UsersCredentialRepository usersRepository;
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
 
 
     @Lazy
-    public UsersService(UsersRepository userRepository , AuthenticationManager authenticationManager , TokenProvider tokenProvider){
-        this.userRepository=userRepository;
+    public UsersCredentialService(UsersCredentialRepository usersRepository , AuthenticationManager authenticationManager , TokenProvider tokenProvider){
+        this.usersRepository=usersRepository;
         this.authenticationManager=authenticationManager;
         this.tokenProvider=tokenProvider;
     }
@@ -45,23 +45,24 @@ public class UsersService implements  UserDetailsService {
         if(!passwordValidation(signUp.getPassword())) {
             throw new InvaildPasswordException("password should contain more then 8 charactors ");
         }
-        Users user = Users.builder()
+        UsersCredential user = UsersCredential.builder()
                 .email(signUp.getEmail())
                 .password(new BCryptPasswordEncoder().encode(signUp.getPassword()))
                 .role(signUp.getRole()).build();
 
-        return  ResponseDTO.builder().statusCode(200).data(userRepository.save(user)).message(Constants.CREATED).build();
+        return  ResponseDTO.builder().statusCode(200).data(usersRepository.save(user)).message(Constants.CREATED).build();
     }
 
 
     public ResponseDTO signIn(SigninDTO signIn) throws AuthenticationException {
 
-        UserDetails user=userRepository.findByEmail(signIn.getEmail());
+        UserDetails user=usersRepository.findByEmail(signIn.getEmail())
+                .orElseThrow(()->  new  UsernameNotFoundException("Email doesn't exist , so please signup"));
 
         var userNamePassword=new UsernamePasswordAuthenticationToken(signIn.getEmail(), signIn.getPassword());
         var authorizedUser= authenticationManager.authenticate(userNamePassword);
-        var accessToken=tokenProvider.generateAccessToken((Users) authorizedUser.getPrincipal());
-        var refreshToken=tokenProvider.generateRefreshToken((Users) authorizedUser.getPrincipal());
+        var accessToken=tokenProvider.generateAccessToken((UsersCredential) authorizedUser.getPrincipal());
+        var refreshToken=tokenProvider.generateRefreshToken((UsersCredential) authorizedUser.getPrincipal());
 
         return ResponseDTO.builder().message(Constants.RETRIEVED).data(new JwtDto(accessToken,refreshToken)).statusCode(200).build();
 
@@ -81,8 +82,9 @@ public class UsersService implements  UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        Users user=userRepository.findByEmail(userName);
+    public UserDetails loadUserByUsername(String userName) {
+        UsersCredential user=usersRepository.findByEmail(userName)
+                .orElseThrow(()-> new UsernameNotFoundException("user id doesn't exist"));
         return user;
 
     }

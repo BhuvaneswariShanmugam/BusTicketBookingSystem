@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.CurrentTimestamp;
-import java.util.Date;
 
 @Entity
 @Table(name="customer")
@@ -19,34 +17,28 @@ import java.util.Date;
 @SuperBuilder
 public class Customer extends  Audit {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name" , nullable = false)
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name" , nullable = true)
     private String lastName;
 
-    @Column(name = "gender")
+    @Column(name = "gender" , nullable = false)
     private String gender;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email", unique = true , nullable = false)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password" , nullable = false)
     private String password;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number" , nullable = false)
     private Long phoneNumber;
 
-    @Column(name="user_id")
-    private Users user;
-
-    @CurrentTimestamp
-    @Column(name = "created_at")
-    private Date createdAt;
+    @ManyToOne
+    @JoinColumn(name="users_id" , nullable = false)
+    private UsersCredential users;
 
     @ManyToOne
     @JoinColumn(name = "trip_id", nullable = false)

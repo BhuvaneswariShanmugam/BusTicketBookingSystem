@@ -16,23 +16,16 @@ import lombok.experimental.SuperBuilder;
 @Table(name="admin")
 public class Admin extends Audit{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-
-    @Column(name="name")
+    @Column(name="name" , nullable = false)
     private String name;
 
-    @Column(name="role")
-    private String role;
-
-    @Column(name="email")
+    @Column(name="email", nullable = false , unique = true )
     private String email;
 
-    @Column(name="password")
+    @Column(name="password", nullable = false)
     private String password;
 
     @ManyToOne
-    @JoinColumn(name="organization_id")
+    @JoinColumn(name="organization_id", nullable = false)
     private Organization organization;
 }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+
+    <changeSet id="e1f8fb3c-65dd-4e7d-98bd-24e98ce7c162" author="Bhuvana">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="organization"/>
+            </not>
+        </preConditions>
+        <createTable tableName="organization">
+            <column name="id" type="VARCHAR(255)">
+                <constraints primaryKey="true" nullable="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="phone_number" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="true" unique = "true"/>
+            </column>
+            <column name="address1" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="address2" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="city" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="state" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="is_active" type="BOOLEAN">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="updated_by" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

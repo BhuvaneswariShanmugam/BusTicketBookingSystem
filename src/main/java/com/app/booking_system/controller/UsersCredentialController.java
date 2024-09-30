@@ -3,7 +3,7 @@ package com.app.booking_system.controller;
 import com.app.booking_system.dto.ResponseDTO;
 import com.app.booking_system.dto.SigninDTO;
 import com.app.booking_system.dto.SignupDTO;
-import com.app.booking_system.service.UsersService;
+import com.app.booking_system.service.UsersCredentialService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-public class UsersController {
+public class UsersCredentialController {
 
-    private final UsersService userService;
+    private final UsersCredentialService userService;
 
-    public UsersController(UsersService userService){
+    public UsersCredentialController(UsersCredentialService userService){
         this.userService=userService;
     }
 

@@ -10,15 +10,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrganizationService {
 
-    @Autowired
-    private OrganizationRepository organizationRepository;
+
+    private final  OrganizationRepository organizationRepository;
+    public OrganizationService(OrganizationRepository organizationRepository){
+        this.organizationRepository=organizationRepository;
+    }
 
     public ResponseDTO createOrganization(Organization organization) {
         return ResponseDTO.builder()
                 .message(Constants.CREATED)
-                .data(organizationRepository.save(organization))
+                .data(this.organizationRepository.save(organization))
                 .statusCode(200)
                 .build();
 
+    }
+
+    public ResponseDTO getAllOrganization(){
+        return ResponseDTO.builder()
+                .message(Constants.RETRIEVED)
+                .data(this.organizationRepository.findAll())
+                .statusCode(200)
+                .build();
     }
 }

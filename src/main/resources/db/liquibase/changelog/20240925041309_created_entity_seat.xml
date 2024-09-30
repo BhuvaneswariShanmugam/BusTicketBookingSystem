@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+    
+    <changeSet id="bdc2f4a1-472b-44ce-b86e-7ef0058ba14e" author="Bhuvana">
+        <createTable tableName="seat">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="bus_id" type="VARCHAR(255)" >
+                <constraints nullable="false" foreignKeyName="fk_seat_bus" references="bus(id)"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="updated_by" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

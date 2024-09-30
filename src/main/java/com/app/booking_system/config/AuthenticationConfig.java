@@ -1,6 +1,6 @@
 package com.app.booking_system.config;
 
-import com.app.booking_system.service.UsersService;
+import com.app.booking_system.service.UsersCredentialService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,18 +19,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity(prePostEnabled = true)
 public class AuthenticationConfig {
 
-    private final UsersService userService;
+    private final UsersCredentialService usersService;
     private final SecurityFilter securityFilter;
 
-    public AuthenticationConfig(UsersService userService, SecurityFilter securityFilter){
-        this.userService=userService;
+    public AuthenticationConfig(UsersCredentialService usersService, SecurityFilter securityFilter){
+        this.usersService=usersService;
         this.securityFilter=securityFilter;
     }
 
     @Bean
     DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userService);
+        authenticationProvider.setUserDetailsService(usersService);
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
@@ -42,13 +42,17 @@ public class AuthenticationConfig {
                 .authorizeHttpRequests(request -> request
 
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/webjars/**").permitAll()
-
+                        .requestMatchers("/organization/**").permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("Admin")
+                        .requestMatchers("/booking/**").hasAnyAuthority("Admin", "Customer")
                         .requestMatchers("/customer/**").hasAnyAuthority("Admin" , "Customer")
                         .requestMatchers("/driver/**").hasAnyAuthority("Driver","Admin")
                         .requestMatchers("/trip/**").hasAnyAuthority("Admin", "Driver" , "Customer")
-                        .requestMatchers("/bus/**").hasAnyAuthority("Driver","Admin")
+                        .requestMatchers("/bus/**").hasAnyAuthority("Driver","Admin","Customer")
+                        .requestMatchers("/feedback/**").hasAuthority("Admin")
+                        .requestMatchers("/seat/**").hasAnyAuthority("Admin","Customer")
+                        .requestMatchers("/users/**").hasAuthority("Admin")
 
                         .anyRequest().authenticated())
 

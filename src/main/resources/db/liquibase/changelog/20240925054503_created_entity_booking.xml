@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+
+    <changeSet id="6e848e75-6982-4245-b437-aecf6c7776cb" author="Bhuvana">
+        <createTable tableName="booking">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="seat_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="booking_date_time" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="booking_status" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="travelling_date" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="updated_by" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

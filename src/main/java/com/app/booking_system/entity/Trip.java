@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.Instant;
 import java.util.Date;
 
 @Entity
@@ -20,28 +21,22 @@ import java.util.Date;
 @Table(name="trip")
 public class Trip extends Audit{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-
-    @Column(name="pickup_point")
+    @Column(name="pickup_point" , nullable = false)
     private String pickupPoint;
 
-    @Column(name="destination_point")
+    @Column(name="destination_point" , nullable = false)
     private String destinationPoint;
 
-    @CurrentTimestamp
-    @Column(name="pickup_time")
-    private Date pickupTime;
+    @Column(name="pickup_time" , nullable = false)
+    private Instant pickupTime;     //2024-09-26T10:00:00Z
 
-    @UpdateTimestamp
-    @Column(name="reaching_time")
-    private Date reachingTime;
+    @Column(name="reaching_time" , nullable = false)
+    private Instant reachingTime;
 
-    @Column(name="expense")
+    @Column(name="expense" , nullable = false)
     private Long expense;
 
     @ManyToOne
-    @JoinColumn(name="organization_id")
+    @JoinColumn(name="organization_id" , nullable = false)
     private Organization organization;
 }

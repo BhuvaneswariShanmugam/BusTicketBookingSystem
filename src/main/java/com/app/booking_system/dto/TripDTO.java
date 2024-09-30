@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.stereotype.Service;
 
 
+import java.time.Instant;
 import java.util.Date;
 
 @Getter
@@ -21,8 +22,8 @@ public class TripDTO extends Audit {
 
     private String pickupPoint;
     private String destinationPoint;
-    private Date pickupTime;
-    private Date reachingTime;
+    private Instant pickupTime;
+    private Instant reachingTime;
     private Long expense;
     private Organization organization;
 }

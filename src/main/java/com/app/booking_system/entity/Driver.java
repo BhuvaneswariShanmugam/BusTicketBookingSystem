@@ -13,25 +13,28 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class Bus extends Audit{
-
-
-    @Column(name="number" , nullable = false)
-    private Long number;
+@Table(name="driver")
+public class Driver extends Audit{
 
     @Column(name="name" , nullable = false)
     private String name;
 
-    @Column(name="capacity" , nullable = false)
-    private Long capacity;
+    @Column(name="email" , nullable = false)
+    private String email;
 
+    @Column(name="password" , nullable = false)
+    private String password;
 
-    @Column(name="type" , nullable = false)
-    private String type;
+    @Column(name="role" , nullable = false)
+    private String role;
+
+    @Column(name="license_number" , nullable = false)
+    private String licenseNumber;
+
+    @Column(name="phone_number" , nullable = false)
+    private Long phoneNumber;
 
     @ManyToOne
     @JoinColumn(name="trip_id" , nullable = false)
     private Trip trip;
-
-
 }
