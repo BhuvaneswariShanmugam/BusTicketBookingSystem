@@ -2,10 +2,11 @@ package com.app.booking_system.service;
 
 import com.app.booking_system.config.TokenProvider;
 import com.app.booking_system.dto.*;
-import com.app.booking_system.entity.UsersCredential;
+import com.app.booking_system.entity.UserCredential;
 import com.app.booking_system.exception.EmailNotFormattedException;
 import com.app.booking_system.exception.InvaildPasswordException;
-import com.app.booking_system.repository.UsersCredentialRepository;
+import com.app.booking_system.exception.PasswordNotMatchException;
+import com.app.booking_system.repository.UserCredentialRepository;
 import com.app.booking_system.util.Constants;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,18 +24,22 @@ import java.util.regex.Pattern;
 @Service
 public class UsersCredentialService implements  UserDetailsService {
 
-    private final UsersCredentialRepository usersRepository;
+    private final UserCredentialRepository userCredentialRepository;
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
 
 
     @Lazy
-    public UsersCredentialService(UsersCredentialRepository usersRepository , AuthenticationManager authenticationManager , TokenProvider tokenProvider){
-        this.usersRepository=usersRepository;
+    public UsersCredentialService(UserCredentialRepository userCredentialRepository , AuthenticationManager authenticationManager , TokenProvider tokenProvider){
+        this.userCredentialRepository=userCredentialRepository;
         this.authenticationManager=authenticationManager;
         this.tokenProvider=tokenProvider;
     }
 
+    public UserCredential loadUserByEmail(String email) {
+        return userCredentialRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User with email " + email + " not found"));
+    }
 
     public ResponseDTO signUp(SignupDTO signUp) {
 
@@ -45,24 +50,28 @@ public class UsersCredentialService implements  UserDetailsService {
         if(!passwordValidation(signUp.getPassword())) {
             throw new InvaildPasswordException("password should contain more then 8 charactors ");
         }
-        UsersCredential user = UsersCredential.builder()
+        if(!signUp.getPassword().equals(signUp.getConfirmationPassword())){
+            throw new PasswordNotMatchException("Password and Confirmation password doesn't match");
+        }
+        UserCredential user = UserCredential.builder()
                 .email(signUp.getEmail())
                 .password(new BCryptPasswordEncoder().encode(signUp.getPassword()))
+                .confirmationPassword(signUp.getConfirmationPassword())
                 .role(signUp.getRole()).build();
 
-        return  ResponseDTO.builder().statusCode(200).data(usersRepository.save(user)).message(Constants.CREATED).build();
+        return  ResponseDTO.builder().statusCode(200).data(userCredentialRepository.save(user)).message(Constants.CREATED).build();
     }
 
 
     public ResponseDTO signIn(SigninDTO signIn) throws AuthenticationException {
 
-        UserDetails user=usersRepository.findByEmail(signIn.getEmail())
+        UserDetails user=userCredentialRepository.findByEmail(signIn.getEmail())
                 .orElseThrow(()->  new  UsernameNotFoundException("Email doesn't exist , so please signup"));
 
         var userNamePassword=new UsernamePasswordAuthenticationToken(signIn.getEmail(), signIn.getPassword());
         var authorizedUser= authenticationManager.authenticate(userNamePassword);
-        var accessToken=tokenProvider.generateAccessToken((UsersCredential) authorizedUser.getPrincipal());
-        var refreshToken=tokenProvider.generateRefreshToken((UsersCredential) authorizedUser.getPrincipal());
+        var accessToken=tokenProvider.generateAccessToken((UserCredential) authorizedUser.getPrincipal());
+        var refreshToken=tokenProvider.generateRefreshToken((UserCredential) authorizedUser.getPrincipal());
 
         return ResponseDTO.builder().message(Constants.RETRIEVED).data(new JwtDto(accessToken,refreshToken)).statusCode(200).build();
 
@@ -83,7 +92,7 @@ public class UsersCredentialService implements  UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userName) {
-        UsersCredential user=usersRepository.findByEmail(userName)
+        UserCredential user=userCredentialRepository.findByEmail(userName)
                 .orElseThrow(()-> new UsernameNotFoundException("user id doesn't exist"));
         return user;
 

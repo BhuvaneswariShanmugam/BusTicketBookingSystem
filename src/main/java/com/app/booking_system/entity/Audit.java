@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.LastModifiedBy;
 
 import java.util.Date;
 
@@ -36,6 +37,7 @@ public class Audit {
     @Column(name = "updated_at", nullable = true)
     private Date updatedAt;
 
+    @LastModifiedBy
     @Column(name = "updated_by", nullable = true)
     private String updatedBy;
 

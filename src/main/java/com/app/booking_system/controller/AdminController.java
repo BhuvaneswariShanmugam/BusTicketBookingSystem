@@ -1,5 +1,6 @@
 package com.app.booking_system.controller;
 
+import com.app.booking_system.dto.AdminDTO;
 import com.app.booking_system.dto.ResponseDTO;
 import com.app.booking_system.entity.Admin;
 import com.app.booking_system.service.AdminService;
@@ -16,8 +17,8 @@ public class AdminController {
     }
 
     @PostMapping("/create")
-    public ResponseDTO createAdmin(@RequestBody Admin admin){
-        return this.adminService.createAdmin(admin);
+    public ResponseDTO createAdmin(@RequestBody AdminDTO adminDto){
+        return this.adminService.createAdmin(adminDto);
     }
 
     @GetMapping("/fetch")

@@ -22,12 +22,6 @@ public class Driver extends Audit{
     @Column(name="email" , nullable = false)
     private String email;
 
-    @Column(name="password" , nullable = false)
-    private String password;
-
-    @Column(name="role" , nullable = false)
-    private String role;
-
     @Column(name="license_number" , nullable = false)
     private String licenseNumber;
 
@@ -35,6 +29,6 @@ public class Driver extends Audit{
     private Long phoneNumber;
 
     @ManyToOne
-    @JoinColumn(name="trip_id" , nullable = false)
+    @JoinColumn(name="trip_id" , nullable = true)
     private Trip trip;
 }

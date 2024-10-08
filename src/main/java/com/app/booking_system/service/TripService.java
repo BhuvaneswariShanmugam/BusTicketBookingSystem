@@ -1,6 +1,8 @@
 package com.app.booking_system.service;
 
+import com.app.booking_system.config.UserAuthHelper;
 import com.app.booking_system.dto.ResponseDTO;
+import com.app.booking_system.dto.TripDTO;
 import com.app.booking_system.entity.Organization;
 import com.app.booking_system.entity.Trip;
 import com.app.booking_system.exception.badRequestServiceAlartException;
@@ -25,34 +27,32 @@ public class TripService {
         this.adminRepository = adminRepository;
     }
 
-    public ResponseDTO createTrip(Trip trip) {
-        // Validate and retrieve the organization
-        Organization organization = organizationRepository.findById(trip.getOrganization().getId())
+    public ResponseDTO createTrip(TripDTO tripDto) {
+
+        String userEmail = UserAuthHelper.getCurrentUserEmail();
+        Organization organization = organizationRepository.findById(tripDto.getOrganization().getId())
                 .orElseThrow(() -> new badRequestServiceAlartException(Constants.ORGANIZATION_NOT_FOUND));
 
-        // Build the Trip object and save it
         Trip savedTrip = Trip.builder()
-                .pickupPoint(trip.getPickupPoint())
-                .destinationPoint(trip.getDestinationPoint())
-                .pickupTime(trip.getPickupTime())
-                .reachingTime(trip.getReachingTime())
-                .expense(trip.getExpense())
-                .organization(organization) // Use the retrieved organization
-                .createdBy(trip.getCreatedBy())
-                .updatedBy(trip.getUpdatedBy())
+                .pickupPoint(tripDto.getPickupPoint())
+                .destinationPoint(tripDto.getDestinationPoint())
+                .pickupTime(tripDto.getPickupTime())
+                .reachingTime(tripDto.getReachingTime())
+                .expense(tripDto.getExpense())
+                .organization(organization)
+                .createdBy(userEmail)
+                .updatedBy(userEmail)
                 .build();
-
-        tripRepository.save(savedTrip);
 
         return ResponseDTO.builder()
                 .message(Constants.CREATED)
-                .data(savedTrip)
+                .data(this.tripRepository.save(savedTrip))
                 .statusCode(200)
                 .build();
     }
 
     public ResponseDTO getAllTripDetails() {
-        List<Trip> trips = tripRepository.findAll(); // Fetch all trips
+        List<Trip> trips = tripRepository.findAll();
 
         return ResponseDTO.builder()
                 .message(Constants.RETRIEVED)

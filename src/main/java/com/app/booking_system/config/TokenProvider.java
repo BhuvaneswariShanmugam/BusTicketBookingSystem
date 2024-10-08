@@ -1,6 +1,6 @@
 package com.app.booking_system.config;
 
-import com.app.booking_system.entity.UsersCredential;
+import com.app.booking_system.entity.UserCredential;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -19,7 +19,7 @@ public class TokenProvider {
     @Value("${security.jwt.secret-key}")
     private String JWT_SECRET;
 
-    public String generateAccessToken(UsersCredential user) {
+    public String generateAccessToken(UserCredential user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
             return JWT.create().withSubject(user.getUsername()).withClaim("username", user.getUsername())
@@ -40,11 +40,11 @@ public class TokenProvider {
 
     public String refreshAccessToken(String refreshToken) {
         String email = validateRefreshToken(refreshToken);
-        UsersCredential user = new UsersCredential(null, email, null, null);
+        UserCredential user = new UserCredential(null, email, null, null,null);
         return generateAccessToken(user);
     }
 
-    public String generateRefreshToken(UsersCredential user) {
+    public String generateRefreshToken(UserCredential user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
             return JWT.create().withSubject(user.getUsername()).withClaim("username", user.getUsername())

@@ -5,10 +5,10 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
-    <changeSet id="271b9dec-b30f-46f0-b9e5-eb4ff414466ckkkkkkkkkkmj " author="Bhuvana">
+    <changeSet id="5e4e7990-316c-4a38-8482-6fc02c416b99" author="Bhuvana">
         <createTable tableName="customer">
             <column name="id" type="VARCHAR(255)">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="false" nullable="false"/>
             </column>
             <column name="first_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -17,22 +17,20 @@
                 <constraints nullable="true"/>
             </column>
             <column name="gender" type="VARCHAR(255)">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="email" type="VARCHAR(255)">
                 <constraints nullable="false" unique="true"/>
             </column>
-            <column name="password" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
+
             <column name="phone_number" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="created_at" type="TIMESTAMP">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="updated_at" type="TIMESTAMP">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>
             <column name="created_by" type="VARCHAR(255)">
                 <constraints nullable="true"/>
@@ -43,9 +41,10 @@
             <column name="trip_id" type="VARCHAR(255)">
                 <constraints nullable="false" foreignKeyName="fk_customer_trip" references="trip(id)"/>
             </column>
-            <column name="users_id" type="VARCHAR(255)">
-                <constraints nullable="false" foreignKeyName="fk_customer_users" references="users(id)"/>
+            <column name="user_credential_id" type="VARCHAR(255)">
+                <constraints nullable="false" foreignKeyName="fk_customer_userCredential" references="user_credential(id)"/>
             </column>
+
         </createTable>
     </changeSet>
 </databaseChangeLog>

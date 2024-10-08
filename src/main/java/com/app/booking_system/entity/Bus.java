@@ -25,7 +25,6 @@ public class Bus extends Audit{
     @Column(name="capacity" , nullable = false)
     private Long capacity;
 
-
     @Column(name="type" , nullable = false)
     private String type;
 

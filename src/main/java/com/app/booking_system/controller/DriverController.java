@@ -1,7 +1,7 @@
 package com.app.booking_system.controller;
 
+import com.app.booking_system.dto.DriverDTO;
 import com.app.booking_system.dto.ResponseDTO;
-import com.app.booking_system.entity.Driver;
 import com.app.booking_system.service.DriverService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +16,8 @@ public class DriverController {
     }
 
     @PostMapping("/create")
-    public ResponseDTO createDriver(@RequestBody Driver driver){
-        return this.driverService.createDriver(driver);
+    public ResponseDTO createDriver(@RequestBody DriverDTO driverDto){
+        return this.driverService.createDriver(driverDto);
     }
 
     @GetMapping("/fetch")

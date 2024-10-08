@@ -16,10 +16,8 @@ public class TripController {
     }
 
     @PostMapping("/create")
-    public ResponseDTO createTrip(@RequestBody Trip trip){
-        System.err.println(trip.getOrganization().getId());
-        int t;
-        return this.tripService.createTrip(trip);
+    public ResponseDTO createTrip(@RequestBody TripDTO tripDto){
+        return this.tripService.createTrip(tripDto);
     }
 
     @GetMapping("fetch")

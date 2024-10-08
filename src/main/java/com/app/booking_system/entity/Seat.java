@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 public class Seat extends Audit {
 
 
-    @Column(name="seat_id" ,nullable = false)
+    @Column(name="number" ,nullable = false)
     private Long number;
 
     @ManyToOne

@@ -1,6 +1,7 @@
 package com.app.booking_system.dto;
 
-import com.app.booking_system.entity.Organization;
+import com.app.booking_system.entity.Audit;
+import com.app.booking_system.entity.Trip;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,11 +13,14 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class AdminDTO {
+public class BusDTO extends Audit {
 
 
-    private String firstName;
-    private String lastName;
-    private String email;
-    private Organization organization;
+    private Long number;
+    private String name;
+    private Long capacity;
+    private String type;
+    private Trip trip;
+
+
 }

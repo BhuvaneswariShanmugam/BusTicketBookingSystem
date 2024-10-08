@@ -16,12 +16,6 @@
             <column name="email" type="VARCHAR(255)" >
                 <constraints nullable="false"/>
             </column>
-            <column name="password" type="VARCHAR(255)" >
-                <constraints nullable="false"/>
-            </column>
-            <column name="role" type="VARCHAR(255)" >
-                <constraints nullable="false"/>
-            </column>
             <column name="license_number" type="VARCHAR(255)" >
                 <constraints nullable="false"/>
             </column>
@@ -29,7 +23,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="trip_id" type="VARCHAR(255)" >
-                <constraints nullable="false" foreignKeyName="fk_driver_trip" references="trip(id)"/>
+                <constraints nullable="true" foreignKeyName="fk_driver_trip" references="trip(id)"/>
             </column>
             <column name="created_at" type="TIMESTAMP" >
                  <constraints nullable="false"/>

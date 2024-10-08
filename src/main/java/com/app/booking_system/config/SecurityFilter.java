@@ -1,7 +1,7 @@
 package com.app.booking_system.config;
 
-import com.app.booking_system.entity.UsersCredential;
-import com.app.booking_system.repository.UsersCredentialRepository;
+import com.app.booking_system.entity.UserCredential;
+import com.app.booking_system.repository.UserCredentialRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,13 +18,12 @@ import java.io.IOException;
 public class SecurityFilter extends OncePerRequestFilter {
 
     private final TokenProvider tokenProvider;
-    private final UsersCredentialRepository usersRepository;
+    private final UserCredentialRepository userCredentialRepository;
 
-    public SecurityFilter(TokenProvider tokenProvider, UsersCredentialRepository usersRepository) {
+    public SecurityFilter(TokenProvider tokenProvider, UserCredentialRepository userCredentialRepository) {
         this.tokenProvider = tokenProvider;
-        this.usersRepository = usersRepository;
+        this.userCredentialRepository = userCredentialRepository;
     }
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -33,11 +32,13 @@ public class SecurityFilter extends OncePerRequestFilter {
             if (token != null) {
                 String email = tokenProvider.validateToken(token);
 
-                UsersCredential user = usersRepository.findByEmail(email)
-
+                UserCredential user = userCredentialRepository.findByEmail(email)
                         .orElseThrow(() -> new UsernameNotFoundException("User with email " + email + " not found"));
+
+                String userEmail = user.getUsername();
+
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                        new UsernamePasswordAuthenticationToken(userEmail, null, user.getAuthorities());
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

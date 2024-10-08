@@ -24,21 +24,18 @@ public class Customer extends  Audit {
     @Column(name = "last_name" , nullable = true)
     private String lastName;
 
-    @Column(name = "gender" , nullable = false)
+    @Column(name="gender" , nullable = false)
     private String gender;
 
     @Column(name = "email", unique = true , nullable = false)
     private String email;
 
-    @Column(name = "password" , nullable = false)
-    private String password;
-
     @Column(name = "phone_number" , nullable = false)
     private Long phoneNumber;
 
     @ManyToOne
-    @JoinColumn(name="users_id" , nullable = false)
-    private UsersCredential users;
+    @JoinColumn(name="user_credential_id" , nullable = false)
+    private UserCredential userCredential;
 
     @ManyToOne
     @JoinColumn(name = "trip_id", nullable = false)

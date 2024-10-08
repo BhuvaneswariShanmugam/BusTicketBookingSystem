@@ -8,13 +8,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 @Entity
-@Table(name = "users")
+@Table(name = "user_credential")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UsersCredential implements UserDetails {
+public class UserCredential implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -26,21 +26,24 @@ public class UsersCredential implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name="confirmation_password")
+    private String confirmationPassword;
+
     @Column(name = "role", nullable = false)
     private String role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if ("Admin".equals(this.role)) {
+        if ("ADMIN".equals(this.role)) {
             return List.of(
-                    new SimpleGrantedAuthority("Admin"),
-                    new SimpleGrantedAuthority("Driver"),
-                    new SimpleGrantedAuthority("Customer")
+                    new SimpleGrantedAuthority("ADMIN"),
+                    new SimpleGrantedAuthority("DRIVER"),
+                    new SimpleGrantedAuthority("CUSTOMER")
             );
-        } else if ("Driver".equals(this.role)) {
-            return List.of(new SimpleGrantedAuthority("Driver"));
+        } else if ("DRIVER".equals(this.role)) {
+            return List.of(new SimpleGrantedAuthority("DRIVER"));
         }
-        return List.of(new SimpleGrantedAuthority("Customer"));
+        return List.of(new SimpleGrantedAuthority("CUSTOMER"));
     }
 
     @Override

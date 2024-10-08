@@ -34,7 +34,6 @@ public class Booking  extends  Audit{
     @Column(name="booking_status")
     private String booking_status;
 
-
     @Column(name="travelling_date")
     private Instant travellingDate; // "2024-10-01T00:00:00Z"
 }
