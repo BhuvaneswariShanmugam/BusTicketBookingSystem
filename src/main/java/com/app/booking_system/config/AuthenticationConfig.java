@@ -45,17 +45,16 @@ public class AuthenticationConfig {
                 .authorizeHttpRequests(request -> request
 
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/webjars/**").permitAll()
-                        .requestMatchers("/organization/**").permitAll()
-                        .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/admin/**").hasAuthority("Admin")
-                        .requestMatchers("/booking/**").hasAnyAuthority("Admin", "Customer")
-                        .requestMatchers("/customer/**").hasAnyAuthority("Admin" , "Customer")
-                        .requestMatchers("/driver/**").hasAnyAuthority("Driver","Admin")
-                        .requestMatchers("/trip/**").hasAnyAuthority("Admin", "Driver" , "Customer")
-                        .requestMatchers("/bus/**").hasAnyAuthority("Driver","Admin","Customer")
-                        .requestMatchers("/feedback/**").hasAuthority("Admin")
-                        .requestMatchers("/seat/**").hasAnyAuthority("Admin","Customer")
-                        .requestMatchers("/users/**").hasAuthority("Admin")
+                        .requestMatchers("/organization/**", "/api/v1/auth/**").permitAll()
+//                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
+//                        .requestMatchers("/booking/**").hasAnyAuthority("ADMIN", "CUSTOMER")
+//                        .requestMatchers("/customer/**").hasAnyAuthority("ADMIN" , "CUSTOMER")
+//                        .requestMatchers("/driver/**").hasAuthority("ADMIN")
+//                        .requestMatchers("/trip/**").hasAnyAuthority("ADMIN",  "CUSTOMER")
+//                        .requestMatchers("/bus/**").hasAnyAuthority("ADMIN","CUSTOMER")
+//                        .requestMatchers("/feedback/**").hasAuthority("ADMIN")
+//                        .requestMatchers("/seat/**").hasAnyAuthority("ADMIN","CUSTOMER")
+//                        .requestMatchers("/users/**").hasAuthority("ADMIN")
 
                         .anyRequest().authenticated())
 

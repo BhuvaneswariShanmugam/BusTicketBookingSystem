@@ -20,16 +20,12 @@ public class BusService {
 
     public ResponseDTO createBus(BusDTO busDto){
 
-        String userId = UserAuthHelper.getCurrentUserId();
-
         Bus bus= Bus.builder()
                 .name(busDto.getName())
                 .number(busDto.getNumber())
                 .capacity(busDto.getCapacity())
                 .type(busDto.getType())
                 .trip(busDto.getTrip())
-                .createdBy(userId)
-                .updatedBy(userId)
                 .build();
         return ResponseDTO.builder()
                 .message(Constants.CREATED)

@@ -1,21 +1,26 @@
 package com.app.booking_system.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.util.Date;
 
 
 @Entity
 @Table(name = "organization")
 @Getter
 @Setter
-@SuperBuilder
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Organization extends Audit {
+public class Organization {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @Column(name = "name", nullable=true)
     private String name;
@@ -40,6 +45,14 @@ public class Organization extends Audit {
 
     @Column(name = "is_active" , nullable=true)
     private Boolean isActive;
+
+    @CreationTimestamp
+    @Column(name = "created_at" , nullable = true)
+    private Date createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = true)
+    private Date updatedAt;
 
 
 }

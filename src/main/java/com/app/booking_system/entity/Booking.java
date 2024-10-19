@@ -6,7 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.CurrentTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.Instant;
 import java.util.Date;
 
@@ -17,7 +20,10 @@ import java.util.Date;
 @NoArgsConstructor
 @SuperBuilder
 @Table(name="booking")
-public class Booking  extends  Audit{
+public class Booking {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @ManyToOne
     @JoinColumn(name="seat_id")
@@ -36,4 +42,13 @@ public class Booking  extends  Audit{
 
     @Column(name="travelling_date")
     private Instant travellingDate; // "2024-10-01T00:00:00Z"
+
+    @CreationTimestamp
+    @Column(name = "created_at" , nullable = true)
+    private Date createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = true)
+    private Date updatedAt;
+
 }

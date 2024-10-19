@@ -6,7 +6,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
     
-    <changeSet id="b303b71f-2cdf-49d3-985d-26731f5a2486" author="Bhuvana">
+    <changeSet id="6efa7496-6210-4df8-aadf-fd184d7c0177" author="Bhuvana">
         <createTable tableName="seat">
             <column name="id" type="VARCHAR(255)">
                 <constraints nullable="false" primaryKey="true"/>
@@ -23,12 +23,7 @@
             <column name="updated_at" type="TIMESTAMP">
                 <constraints nullable="true"/>
             </column>
-            <column name="created_by" type="VARCHAR(255)">
-                <constraints nullable="true"/>
-            </column>
-            <column name="updated_by" type="VARCHAR(255)">
-                <constraints nullable="true"/>
-            </column>
+
         </createTable>
     </changeSet>
 </databaseChangeLog>

@@ -1,15 +1,13 @@
 package com.app.booking_system.dto;
 
-import com.app.booking_system.entity.Audit;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
-public class OrganizationDTO extends Audit {
+@Builder
+public class OrganizationDTO {
 
     private String name;
     private Long phoneNumber;

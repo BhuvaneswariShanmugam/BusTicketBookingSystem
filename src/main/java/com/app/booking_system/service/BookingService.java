@@ -19,16 +19,12 @@ public class BookingService {
 
     public ResponseDTO createBooking(BookingDTO bookingDto){
 
-        String userId = UserAuthHelper.getCurrentUserId();
-
         Booking booking= Booking.builder()
                 .seat(bookingDto.getSeat())
                 .booking_status(bookingDto.getBookingStatus())
                 .bookingDateTime(bookingDto.getBookingDateTime())
                 .customer(bookingDto.getCustomer())
                 .travellingDate(bookingDto.getTravellingDate())
-                .createdBy(userId)
-                .updatedBy(userId)
                 .build();
         return ResponseDTO.builder()
                 .message(Constants.CREATED)

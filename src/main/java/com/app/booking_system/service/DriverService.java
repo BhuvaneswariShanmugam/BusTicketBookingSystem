@@ -24,8 +24,6 @@ public class DriverService {
 
     public ResponseDTO createDriver(DriverDTO driverDto){
 
-        String userId = UserAuthHelper.getCurrentUserId();
-
         UserCredential existUser=userCredentialRepository.findByEmail(driverDto.getEmail())
                 .orElseThrow(()->  new UsernameNotFoundException("user doesn't exist , so please signup"));
         if(!existUser.getEmail().equals(driverDto.getEmail())){
@@ -37,8 +35,6 @@ public class DriverService {
                 .licenseNumber(driverDto.getLicenseNumber())
                 .phoneNumber(driverDto.getPhoneNumber())
                 .trip(driverDto.getTrip())
-                .createdBy(userId)
-                .updatedBy(userId)
                 .build();
         return ResponseDTO.builder()
                 .message(Constants.CREATED)

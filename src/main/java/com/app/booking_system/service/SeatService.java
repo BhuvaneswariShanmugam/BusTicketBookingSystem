@@ -24,16 +24,11 @@ public class SeatService {
 
     public ResponseDTO createSeat(Seat seat){
 
-        String userId = UserAuthHelper.getCurrentUserId();
-
-
          Bus bus= busRepository.findById(seat.getBus().getId())
                  .orElseThrow(() -> new badRequestServiceAlartException("Bus Id doesn't exist"));
          Seat obj= Seat.builder()
                  .number(seat.getNumber())
                  .bus(seat.getBus())
-                 .createdBy(userId)
-                 .updatedBy(userId)
                  .build();
 
              return ResponseDTO.builder()

@@ -5,7 +5,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
-    <changeSet id="4b2e6135-a446-4908-a93e-b3f5f60075d2" author="Bhuvana">
+    <changeSet id="d30e4ad0-3055-45cf-9b94-934c02ec0d7b" author="Bhuvana">
         <createTable tableName="feedback">
             <column name="id" type="VARCHAR(255)">
                 <constraints primaryKey="true" nullable="false"/>
@@ -19,15 +19,10 @@
             <column name="created_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_by" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
             <column name="updated_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_by" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
+
 
 
         </createTable>

@@ -1,20 +1,25 @@
 package com.app.booking_system.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.util.Date;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@Builder
 @Table(name="feedback")
-public class Feedback  extends  Audit{
+public class Feedback  {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @ManyToOne
     @JoinColumn(name="customer_id")
@@ -22,4 +27,12 @@ public class Feedback  extends  Audit{
 
     @Column(name="feedback")
     private String feedback;
+
+    @CreationTimestamp
+    @Column(name = "created_at" , nullable = true)
+    private Date createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = true)
+    private Date updatedAt;
 }

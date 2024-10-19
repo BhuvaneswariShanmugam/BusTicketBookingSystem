@@ -28,8 +28,6 @@ public class TripService {
     }
 
     public ResponseDTO createTrip(TripDTO tripDto) {
-
-        String userEmail = UserAuthHelper.getCurrentUserEmail();
         Organization organization = organizationRepository.findById(tripDto.getOrganization().getId())
                 .orElseThrow(() -> new badRequestServiceAlartException(Constants.ORGANIZATION_NOT_FOUND));
 
@@ -40,8 +38,6 @@ public class TripService {
                 .reachingTime(tripDto.getReachingTime())
                 .expense(tripDto.getExpense())
                 .organization(organization)
-                .createdBy(userEmail)
-                .updatedBy(userEmail)
                 .build();
 
         return ResponseDTO.builder()

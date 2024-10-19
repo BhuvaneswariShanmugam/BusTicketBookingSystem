@@ -1,12 +1,13 @@
 package com.app.booking_system.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.Instant;
+import java.util.Date;
 
 
 @Entity
@@ -14,9 +15,13 @@ import java.time.Instant;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@Builder
 @Table(name="trip")
-public class Trip extends Audit{
+public class Trip {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @Column(name="pickup_point" , nullable = false)
     private String pickupPoint;
@@ -36,4 +41,12 @@ public class Trip extends Audit{
     @ManyToOne
     @JoinColumn(name="organization_id" , nullable = false)
     private Organization organization;
+
+    @CreationTimestamp
+    @Column(name = "created_at" , nullable = true)
+    private Date createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = true)
+    private Date updatedAt;
 }

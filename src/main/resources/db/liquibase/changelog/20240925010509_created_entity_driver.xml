@@ -5,7 +5,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
-    <changeSet id="71f39f02-dab8-4a11-b203-7124b167f4d1" author="Bhuvana">
+    <changeSet id="92a37d29-b272-4935-8105-844bde24f5e1" author="Bhuvana">
         <createTable tableName="driver">
             <column name="id" type="VARCHAR(255)" >
                 <constraints primaryKey="true" nullable="false"/>
@@ -28,24 +28,9 @@
             <column name="created_at" type="TIMESTAMP" >
                  <constraints nullable="false"/>
              </column>
-            <column name="created_by" type="VARCHAR(255)" >
-                <constraints nullable="false"/>
-            </column>
             <column name="updated_at" type="TIMESTAMP" >
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_by" type="VARCHAR(255)" >
-            <constraints nullable="false"/>
-        </column>
-
-
-
-
-
-
-
-
-
 
         </createTable>
     </changeSet>

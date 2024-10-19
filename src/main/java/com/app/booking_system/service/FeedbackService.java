@@ -22,17 +22,12 @@ public class FeedbackService {
 
     public ResponseDTO createFeedback(Feedback feedback){
 
-        String userId = UserAuthHelper.getCurrentUserId();
-        System.out.println("current logged userId : "+userId);
-
         Customer existCustomer=customerRepository.findById(feedback.getCustomer().getId())
                 .orElseThrow(()->new badRequestServiceAlartException("Customer doesn't exist"));
 
         Feedback obj=Feedback.builder()
                 .feedback(feedback.getFeedback())
                 .customer(existCustomer)
-                .updatedBy(userId)
-                .createdBy(userId)
                 .build();
 
         return ResponseDTO.builder()
