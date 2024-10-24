@@ -1,20 +1,15 @@
 package com.app.booking_system.config;
 
 import com.app.booking_system.entity.UserCredential;
-import com.app.booking_system.exception.InvalidTokenException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
 public class TokenProvider {
@@ -35,21 +30,31 @@ public class TokenProvider {
     public String generateAccessToken(UserCredential user) {
         try {
             String username = user.getUsername();
-            String firstName = user.getFirstName(); // Get the user's first name from UserCredential
+            String firstName = user.getFirstName();
+            String userId = user.getId(); // Assuming you have a method to get the user's ID
 
             Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
             return JWT.create()
                     .withSubject(username)
                     .withClaim("UserEmail", username)
-                    .withIssuedAt(Instant.now()) // Add issuedAt claim
+                    .withIssuedAt(Instant.now())
                     .withExpiresAt(genAccessExpirationDate())
-                    .withClaim("Name", firstName) // Add the firstName claim here
+                    .withClaim("FirstName", firstName)
+                    .withClaim("UserId", userId) // Add the user ID claim
                     .sign(algorithm);
         } catch (JWTCreationException exception) {
             throw new JWTCreationException("Error while generating access token", exception);
         }
     }
 
+    public String getUserIdFromToken(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
+            return JWT.require(algorithm).build().verify(token).getClaim("UserId").asString(); // Get the user ID claim as String
+        } catch (JWTVerificationException exception) {
+            throw new JWTVerificationException("Error while validating token", exception);
+        }
+    }
 
 
 

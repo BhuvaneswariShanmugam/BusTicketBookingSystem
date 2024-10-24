@@ -41,31 +41,31 @@ public class AuthenticationConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf ->csrf.disable())
+                .csrf(csrf -> csrf.disable()) // Disable CSRF protection
                 .authorizeHttpRequests(request -> request
-
+                        // Allow all routes without requiring authentication
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/webjars/**").permitAll()
                         .requestMatchers("/organization/**", "/api/v1/auth/**").permitAll()
-//                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
-//                        .requestMatchers("/booking/**").hasAnyAuthority("ADMIN", "CUSTOMER")
-//                        .requestMatchers("/customer/**").hasAnyAuthority("ADMIN" , "CUSTOMER")
-//                        .requestMatchers("/driver/**").hasAuthority("ADMIN")
-//                        .requestMatchers("/trip/**").hasAnyAuthority("ADMIN",  "CUSTOMER")
-//                        .requestMatchers("/bus/**").hasAnyAuthority("ADMIN","CUSTOMER")
-//                        .requestMatchers("/feedback/**").hasAuthority("ADMIN")
-//                        .requestMatchers("/seat/**").hasAnyAuthority("ADMIN","CUSTOMER")
-//                        .requestMatchers("/users/**").hasAuthority("ADMIN")
-
-                        .anyRequest().authenticated())
-
-                .sessionManagement(sessionManagement -> sessionManagement
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .requestMatchers("/admin/**").permitAll()
+                        .requestMatchers("/booking/**").permitAll()
+                        .requestMatchers("/customer/**").permitAll()
+                        .requestMatchers("/driver/**").permitAll()
+                        .requestMatchers("/trip/**").permitAll()
+                        .requestMatchers("/bus/**").permitAll()
+                        .requestMatchers("/feedback/**").permitAll()
+                        .requestMatchers("/seat/**").permitAll()
+                        .requestMatchers("/users/**").permitAll()
+                        .anyRequest().permitAll() // Allow all other requests without requiring authentication
                 )
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
+                .sessionManagement(sessionManagement -> sessionManagement
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Stateless session (no session management)
+                )
+                .authenticationProvider(authenticationProvider()) // Inject the authentication provider
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class); // Add your security filter
 
         return http.build();
     }
+
 
     private void setAuthentication(UserCredential user) {
         UsernamePasswordAuthenticationToken authentication =

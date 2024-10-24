@@ -2,7 +2,6 @@ package com.app.booking_system.controller;
 
 import com.app.booking_system.dto.ResponseDTO;
 import com.app.booking_system.dto.TripDTO;
-import com.app.booking_system.entity.Trip;
 import com.app.booking_system.service.TripService;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,5 +23,14 @@ public class TripController {
     public ResponseDTO getAllTripDetails(){
         return this.tripService.getAllTripDetails();
     }
+
+    @GetMapping("/search")
+    public boolean searchTrips(@RequestParam String pickupPoint,
+                               @RequestParam String destinationPoint,
+                               @RequestParam String pickupTime) {
+        // Call the service to handle the search logic and return a boolean result
+        return tripService.existsTrip(pickupPoint, destinationPoint, pickupTime);
+    }
+
 
 }

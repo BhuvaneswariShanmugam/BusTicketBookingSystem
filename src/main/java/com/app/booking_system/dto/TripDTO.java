@@ -1,11 +1,10 @@
 package com.app.booking_system.dto;
 
-import com.app.booking_system.entity.Organization;
+
 import lombok.*;
 
-
-
 import java.time.Instant;
+
 
 @Getter
 @Setter
@@ -19,5 +18,5 @@ public class TripDTO {
     private Instant pickupTime;
     private Instant reachingTime;
     private Long expense;
-    private Organization organization;
+//    private Organization organization;
 }

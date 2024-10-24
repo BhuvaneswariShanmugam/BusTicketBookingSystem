@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -38,10 +39,6 @@ public class Trip {
     @Column(name="expense" , nullable = false)
     private Long expense;
 
-    @ManyToOne
-    @JoinColumn(name="organization_id" , nullable = false)
-    private Organization organization;
-
     @CreationTimestamp
     @Column(name = "created_at" , nullable = true)
     private Date createdAt;
@@ -49,4 +46,8 @@ public class Trip {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = true)
     private Date updatedAt;
+
+//    @ManyToOne
+//    @JoinColumn(name="organization_id" , nullable = false)
+//    private Organization organization;
 }

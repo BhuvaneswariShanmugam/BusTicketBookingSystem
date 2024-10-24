@@ -99,18 +99,24 @@ public class UsersCredentialService implements  UserDetailsService {
 
 
     public ResponseDTO signIn(SigninDTO signIn) throws AuthenticationException {
+        UserDetails user = userCredentialRepository.findByEmail(signIn.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("Email doesn't exist, so please sign up"));
 
-        UserDetails user=userCredentialRepository.findByEmail(signIn.getEmail())
-                .orElseThrow(()->  new  UsernameNotFoundException("Email doesn't exist , so please signup"));
+        var userNamePassword = new UsernamePasswordAuthenticationToken(signIn.getEmail(), signIn.getPassword());
+        var authorizedUser = authenticationManager.authenticate(userNamePassword);
+        var accessToken = tokenProvider.generateAccessToken((UserCredential) authorizedUser.getPrincipal());
+        var refreshToken = tokenProvider.generateRefreshToken((UserCredential) authorizedUser.getPrincipal());
 
-        var userNamePassword=new UsernamePasswordAuthenticationToken(signIn.getEmail(), signIn.getPassword());
-        var authorizedUser= authenticationManager.authenticate(userNamePassword);
-        var accessToken=tokenProvider.generateAccessToken((UserCredential) authorizedUser.getPrincipal());
-        var refreshToken=tokenProvider.generateRefreshToken((UserCredential) authorizedUser.getPrincipal());
+        // Extracting user ID from the token (ensure your token contains this claim)
+        String userId = tokenProvider.getUserIdFromToken(accessToken);
 
-        return ResponseDTO.builder().message(Constants.RETRIEVED).data(new JwtDto(accessToken,refreshToken)).statusCode(200).build();
-
+        return ResponseDTO.builder()
+                .message(Constants.RETRIEVED)
+                .data(new JwtDto(accessToken, refreshToken)) // Include userId in JwtDto
+                .statusCode(200)
+                .build();
     }
+
 
 
 
