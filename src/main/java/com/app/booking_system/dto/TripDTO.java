@@ -4,6 +4,7 @@ package com.app.booking_system.dto;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.Date;
 
 
 @Getter

@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TripService {
@@ -56,15 +55,15 @@ public class TripService {
                 .build();
     }
 
-    public boolean existsTrip(String pickupPoint, String destinationPoint, String pickupDateStr) {
-        // Parse the pickupDate from String to LocalDate
-        LocalDate pickupDate = LocalDate.parse(pickupDateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    public boolean existsTrip(String pickupPoint, String destinationPoint, String pickupTime) {
 
-        // Convert the LocalDate to Instant (start and end of the day)
+        LocalDate pickupDate = LocalDate.parse(pickupTime, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
         Instant startOfDay = pickupDate.atStartOfDay(ZoneId.of("Asia/Kolkata")).toInstant();
         Instant endOfDay = pickupDate.plusDays(1).atStartOfDay(ZoneId.of("Asia/Kolkata")).toInstant();
 
-        // Query the repository to check if any trip exists in the given time range
+        System.err.println(tripRepository.existsByPickupPointAndDestinationPointAndPickupTimeBetween(
+                pickupPoint, destinationPoint, startOfDay, endOfDay));
         return tripRepository.existsByPickupPointAndDestinationPointAndPickupTimeBetween(
                 pickupPoint, destinationPoint, startOfDay, endOfDay
         );
@@ -74,8 +73,8 @@ public class TripService {
         return TripDTO.builder()
                 .pickupPoint(trip.getPickupPoint())
                 .destinationPoint(trip.getDestinationPoint())
-                .pickupTime(trip.getPickupTime())  // Convert Instant to String
-                .reachingTime(trip.getReachingTime())  // Convert Instant to String
+                .pickupTime(trip.getPickupTime())
+                .reachingTime(trip.getReachingTime())
                 .expense(trip.getExpense())
                 .build();
     }
@@ -83,52 +82,3 @@ public class TripService {
 
 
 
-
-//
-//@Service
-//public class TripService
-//{
-//
-//    private final com.app.booking_system.repository.TripRepository tripRepository;
-//    private final OrganizationRepository organizationRepository;
-//    private  final AdminRepository adminRepository;
-//
-//
-//    public TripService(TripRepository tripRepository , OrganizationRepository organizationRepository , AdminRepository adminRepository){
-//        this.tripRepository=tripRepository;
-//        this.organizationRepository=organizationRepository;
-//        this.adminRepository=adminRepository;
-//    }
-//
-//    public ResponseDTO createTrip(Trip trip){
-//        Organization organization = organizationRepository.findById(trip.getOrganization().getId())
-//                .orElseThrow(() -> new badRequestServiceAlartException(Constants.ORGANIZATION_NOT_FOUND));
-//
-//        Trip obj = Trip.builder()
-//                .pickupPoint(trip.getPickupPoint())
-//                .destinationPoint(trip.getDestinationPoint())
-//                .pickupTime(trip.getPickupTime())
-//                .reachingTime(trip.getReachingTime())
-//                .expense(trip.getExpense())
-//                .organization(trip.getOrganization()) // Set the valid organization object
-//                .createdBy(trip.getCreatedBy())
-//                .updatedBy(trip.getUpdatedBy())
-//                .build();
-//
-//        tripRepository.save(obj);
-//
-//        return ResponseDTO.builder()
-//                .message(Constants.CREATED)
-//                .data(obj)
-//                .statusCode(200)
-//                .build();
-//    }
-//
-//    public ResponseDTO getAllTripDetails(){
-//        return  ResponseDTO.builder()
-//                .message(Constants.RETRIEVED)
-//                .data(this.tripRepository.findAll())
-//                .statusCode(200)
-//                .build();
-//    }
-//}

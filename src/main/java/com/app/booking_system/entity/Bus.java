@@ -25,9 +25,6 @@ public class Bus {
     @Column(name="number" , nullable = false)
     private Long number;
 
-    @Column(name="name" , nullable = false)
-    private String name;
-
     @Column(name="capacity" , nullable = false)
     private Long capacity;
 

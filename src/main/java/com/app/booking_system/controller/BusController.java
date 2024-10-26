@@ -19,8 +19,20 @@ public class BusController {
         return this.busService.createBus(busDto);
     }
 
-    @GetMapping("/fetch")
+    @GetMapping("/fetch-all-bus")
     public ResponseDTO getAllBusDetails(){
         return this.busService.getAllBusDetails();
     }
+
+    @GetMapping("/fetch-bus/{id}")
+    public ResponseDTO getBusById(@PathVariable String id){
+        return this.busService.getBusById(id);
+    }
+
+    @PutMapping("/update-bus/{id}")
+    public ResponseDTO updateBus(@PathVariable String id, @RequestBody BusDTO busDto) {
+        return this.busService.updateBus(id, busDto);
+    }
+
+
 }
