@@ -39,26 +39,6 @@ public class BookingService {
         this.userCredentialRepository=userCredentialRepository;
     }
 
-//    public ResponseDTO createBooking(BookingDTO bookingDto){
-//
-//        Booking booking= Booking.builder()
-//                .seat(bookingDto.getSeat())
-//                .bus(bookingDto.getBus())
-//                .trip(bookingDto.getTrip())
-//                .booking_status(bookingDto.getBookingStatus())
-//                .bookingDateTime(bookingDto.getBookingDateTime())
-//                .customer(bookingDto.getCustomer())
-//                .travellingDate(bookingDto.getTravellingDate())
-//                .bookedNoOfSeats(bookingDto.getSelectedSeats())
-//                .totalPrice(bookingDto.getTotalPrice())
-//                .perSeatAmount(bookingDto.getPerSeatAmount())
-//                .build();
-//        return ResponseDTO.builder()
-//                .message(Constants.CREATED)
-//                .data(this.bookingRepository.save(booking))
-//                .statusCode(200)
-//                .build();
-//    }
 
     public ResponseDTO getAllBookingDetail(){
         return ResponseDTO.builder()
@@ -67,58 +47,6 @@ public class BookingService {
                 .statusCode(200)
                 .build();
     }
-//
-//    public ResponseDTO createBooking(String pickupPoint, String destinationPoint, String pickupDateString, Long busNumber, String busType, List<Long> bookedNoOfSeats, Long perSeatAmount, Long totalAmount, String token) {
-//
-//        // Parse the pickup date from string to LocalDate
-//        LocalDate pickupDate = LocalDate.parse(pickupDateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-//
-//        // Convert LocalDate to Instant for start and end of day
-//        Instant startOfDay = pickupDate.atStartOfDay(ZoneId.of("Asia/Kolkata")).toInstant();
-//        Instant endOfDay = pickupDate.plusDays(1).atStartOfDay(ZoneId.of("Asia/Kolkata")).toInstant();
-//
-//        // Find the trip using start and end of day
-//        Trip trip = tripService.findTrip(pickupPoint, destinationPoint, startOfDay, endOfDay);
-//
-//        if (trip == null) {
-//            throw new RuntimeException("Trip not found for the given parameters.");
-//        }
-//
-//        Bus bus = busService.findBusId(busNumber, busType);
-//        if (bus == null) {
-//            throw new RuntimeException("Bus not found for the given number and type.");
-//        }
-//
-//        String customerId = tokenProvider.getUserIdFromToken(token);
-//        Customer customer = customerService.findCustomerById(customerId);
-//
-//        if (customer == null) {
-//            throw new RuntimeException("Customer not found for the given ID.");
-//        }
-//
-//        List<Long> alreadyBookedSeat = new ArrayList<>();
-//
-//        for (Long seatNumber : bookedNoOfSeats) {
-//            Seat seat = seatRepository.findByNumberAndBusId(seatNumber, bus.getId());
-//            if (seat == null) {
-//                alreadyBookedSeat.add(seatNumber); // Track unavailable seats
-//            }
-//        }
-//
-//        Booking booking = Booking.builder()
-//                .bus(bus)
-//                .trip(trip)
-//                .customer(customer)
-//                .perSeatAmount(perSeatAmount)
-//                .totalPrice(totalAmount)
-//                .build();
-//
-//        return ResponseDTO.builder()
-//                .data(Constants.CREATED)
-//                .data(bookingRepository.save(booking))
-//                .statusCode(200)
-//                .build();
-//    }
 
     public ResponseDTO createBooking(String pickupPoint, String destinationPoint, String pickupTime, Long busNumber, String busType, List<Long> bookedNoOfSeats, Long perSeatAmount, Long totalAmount, String token) {
         LocalDate pickupDate = LocalDate.parse(pickupTime, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
