@@ -78,6 +78,29 @@ public class TripService {
                 .expense(trip.getExpense())
                 .build();
     }
+
+    public Trip findTrip(String pickupPoint, String destinationPoint, String pickupTime) {
+
+        LocalDate pickupDate = LocalDate.parse(pickupTime, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        Instant startOfDay = pickupDate.atStartOfDay(ZoneId.of("Asia/Kolkata")).toInstant();
+        Instant endOfDay = pickupDate.plusDays(1).atStartOfDay(ZoneId.of("Asia/Kolkata")).toInstant();
+
+
+        System.err.println(tripRepository.findByPickupPointAndDestinationPointAndPickupTimeBetween(
+                pickupPoint, destinationPoint, startOfDay, endOfDay));
+
+        Trip trip = tripRepository.findByPickupPointAndDestinationPointAndPickupTimeBetween(
+                pickupPoint, destinationPoint, startOfDay, endOfDay
+        );
+
+        return trip;
+    }
+
+    public Trip findTrip(String pickupPoint, String destinationPoint, Instant startOfDay, Instant endOfDay) {
+        return tripRepository.findByPickupPointAndDestinationPointAndPickupTimeBetween(
+                pickupPoint, destinationPoint, startOfDay, endOfDay
+        );
+    }
 }
 
 

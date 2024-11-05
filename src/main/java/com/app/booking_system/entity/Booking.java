@@ -12,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,22 +27,29 @@ public class Booking {
     private String id;
 
     @ManyToOne
-    @JoinColumn(name="seat_id")
-    private Seat seat;
+    @JoinColumn(name="bus_id")
+    private Bus bus;
 
     @ManyToOne
-    @JoinColumn(name="customer_id")
-    private Customer customer;
+    @JoinColumn(name="trip_id")
+    private Trip trip;
+
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private UserCredential user;
 
     @CurrentTimestamp
     @Column(name="booking_date_time")
     private Date bookingDateTime;
 
-    @Column(name="booking_status")
-    private String booking_status;
+    @Column(name="booked_no_of_seats")
+    private List<Long> bookedNoOfSeats;
 
-    @Column(name="travelling_date")
-    private Instant travellingDate; // "2024-10-01T00:00:00Z"
+    @Column(name="per_seat_amount")
+    private Long perSeatAmount;
+
+    @Column(name="total_price")
+    private Long totalPrice;
 
     @CreationTimestamp
     @Column(name = "created_at" , nullable = true)

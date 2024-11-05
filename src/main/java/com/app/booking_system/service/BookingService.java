@@ -1,37 +1,64 @@
 package com.app.booking_system.service;
 
-import com.app.booking_system.config.UserAuthHelper;
-import com.app.booking_system.dto.BookingDTO;
+import com.app.booking_system.config.TokenProvider;
 import com.app.booking_system.dto.ResponseDTO;
-import com.app.booking_system.entity.Booking;
+import com.app.booking_system.entity.*;
 import com.app.booking_system.repository.BookingRepository;
+import com.app.booking_system.repository.SeatRepository;
+import com.app.booking_system.repository.TripRepository;
+import com.app.booking_system.repository.UserCredentialRepository;
 import com.app.booking_system.util.Constants;
 import org.springframework.stereotype.Service;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class BookingService {
 
     private final BookingRepository bookingRepository;
+    private final BusService busService;
+    private final SeatRepository seatRepository;
+    private final TokenProvider tokenProvider;
+    private  final TripService tripService;
+    private final CustomerService customerService;
+    private final TripRepository tripRepository;
+    private final UserCredentialRepository userCredentialRepository;
 
-    public BookingService(BookingRepository bookingRepository) {
+    public BookingService(BookingRepository bookingRepository, BusService busService, UserCredentialRepository userCredentialRepository, SeatRepository seatRepository, TokenProvider tokenProvider, TripService tripService, CustomerService customerService , TripRepository tripRepository) {
         this.bookingRepository = bookingRepository;
+        this.busService=busService;
+        this.seatRepository=seatRepository;
+        this.tokenProvider=tokenProvider;
+        this.tripService=tripService;
+        this.customerService=customerService;
+        this.tripRepository=tripRepository;
+        this.userCredentialRepository=userCredentialRepository;
     }
 
-    public ResponseDTO createBooking(BookingDTO bookingDto){
-
-        Booking booking= Booking.builder()
-                .seat(bookingDto.getSeat())
-                .booking_status(bookingDto.getBookingStatus())
-                .bookingDateTime(bookingDto.getBookingDateTime())
-                .customer(bookingDto.getCustomer())
-                .travellingDate(bookingDto.getTravellingDate())
-                .build();
-        return ResponseDTO.builder()
-                .message(Constants.CREATED)
-                .data(this.bookingRepository.save(booking))
-                .statusCode(200)
-                .build();
-    }
+//    public ResponseDTO createBooking(BookingDTO bookingDto){
+//
+//        Booking booking= Booking.builder()
+//                .seat(bookingDto.getSeat())
+//                .bus(bookingDto.getBus())
+//                .trip(bookingDto.getTrip())
+//                .booking_status(bookingDto.getBookingStatus())
+//                .bookingDateTime(bookingDto.getBookingDateTime())
+//                .customer(bookingDto.getCustomer())
+//                .travellingDate(bookingDto.getTravellingDate())
+//                .bookedNoOfSeats(bookingDto.getSelectedSeats())
+//                .totalPrice(bookingDto.getTotalPrice())
+//                .perSeatAmount(bookingDto.getPerSeatAmount())
+//                .build();
+//        return ResponseDTO.builder()
+//                .message(Constants.CREATED)
+//                .data(this.bookingRepository.save(booking))
+//                .statusCode(200)
+//                .build();
+//    }
 
     public ResponseDTO getAllBookingDetail(){
         return ResponseDTO.builder()
@@ -40,4 +67,104 @@ public class BookingService {
                 .statusCode(200)
                 .build();
     }
+//
+//    public ResponseDTO createBooking(String pickupPoint, String destinationPoint, String pickupDateString, Long busNumber, String busType, List<Long> bookedNoOfSeats, Long perSeatAmount, Long totalAmount, String token) {
+//
+//        // Parse the pickup date from string to LocalDate
+//        LocalDate pickupDate = LocalDate.parse(pickupDateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//
+//        // Convert LocalDate to Instant for start and end of day
+//        Instant startOfDay = pickupDate.atStartOfDay(ZoneId.of("Asia/Kolkata")).toInstant();
+//        Instant endOfDay = pickupDate.plusDays(1).atStartOfDay(ZoneId.of("Asia/Kolkata")).toInstant();
+//
+//        // Find the trip using start and end of day
+//        Trip trip = tripService.findTrip(pickupPoint, destinationPoint, startOfDay, endOfDay);
+//
+//        if (trip == null) {
+//            throw new RuntimeException("Trip not found for the given parameters.");
+//        }
+//
+//        Bus bus = busService.findBusId(busNumber, busType);
+//        if (bus == null) {
+//            throw new RuntimeException("Bus not found for the given number and type.");
+//        }
+//
+//        String customerId = tokenProvider.getUserIdFromToken(token);
+//        Customer customer = customerService.findCustomerById(customerId);
+//
+//        if (customer == null) {
+//            throw new RuntimeException("Customer not found for the given ID.");
+//        }
+//
+//        List<Long> alreadyBookedSeat = new ArrayList<>();
+//
+//        for (Long seatNumber : bookedNoOfSeats) {
+//            Seat seat = seatRepository.findByNumberAndBusId(seatNumber, bus.getId());
+//            if (seat == null) {
+//                alreadyBookedSeat.add(seatNumber); // Track unavailable seats
+//            }
+//        }
+//
+//        Booking booking = Booking.builder()
+//                .bus(bus)
+//                .trip(trip)
+//                .customer(customer)
+//                .perSeatAmount(perSeatAmount)
+//                .totalPrice(totalAmount)
+//                .build();
+//
+//        return ResponseDTO.builder()
+//                .data(Constants.CREATED)
+//                .data(bookingRepository.save(booking))
+//                .statusCode(200)
+//                .build();
+//    }
+
+    public ResponseDTO createBooking(String pickupPoint, String destinationPoint, String pickupTime, Long busNumber, String busType, List<Long> bookedNoOfSeats, Long perSeatAmount, Long totalAmount, String token) {
+        LocalDate pickupDate = LocalDate.parse(pickupTime, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        Instant startOfDay = pickupDate.atStartOfDay(ZoneId.of("Asia/Kolkata")).toInstant();
+        Instant endOfDay = pickupDate.plusDays(1).atStartOfDay(ZoneId.of("Asia/Kolkata")).toInstant();
+
+        Trip trip=tripRepository.findByPickupPointAndDestinationPointAndPickupTimeBetween(pickupPoint, destinationPoint, startOfDay, endOfDay);
+        System.out.println("Trip found: " + (trip != null ? trip.getId() : "No trip found"));
+
+        Bus bus = busService.findBusId(busNumber, busType);
+        if (bus == null) {
+            throw new RuntimeException("Bus not found for the given number and type.");
+        }
+
+        String userId = tokenProvider.getUserIdFromToken(token);
+        System.out.println("Extracted Customer ID: " + userId);
+        UserCredential user = userCredentialRepository.findUserById(userId);
+
+        if (user == null) {
+            throw new RuntimeException("Customer not found for the given ID.");
+        }
+
+        List<Long> alreadyBookedSeat = new ArrayList<>();
+
+        for (Long seatNumber : bookedNoOfSeats) {
+            Seat seat = seatRepository.findByNumberAndBusId(seatNumber, bus.getId());
+            if (seat == null) {
+                alreadyBookedSeat.add(seatNumber); // Track unavailable seats
+            }
+        }
+        Booking booking = Booking.builder()
+                .bus(bus)
+                .trip(bus.getTrip())
+                .user(user)
+                .perSeatAmount(perSeatAmount)
+                .bookedNoOfSeats(bookedNoOfSeats)
+                .totalPrice(totalAmount)
+                .build();
+
+        return ResponseDTO.builder()
+                .data(Constants.CREATED)
+                .data(bookingRepository.save(booking))
+                .statusCode(200)
+                .build();
+    }
+
+
 }

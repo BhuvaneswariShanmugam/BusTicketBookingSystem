@@ -1,6 +1,7 @@
 package com.app.booking_system.service;
 
 import com.app.booking_system.dto.ResponseDTO;
+import com.app.booking_system.entity.Customer;
 import com.app.booking_system.repository.CustomerRepository;
 import com.app.booking_system.repository.UserCredentialRepository;
 import com.app.booking_system.util.Constants;
@@ -26,4 +27,7 @@ public class CustomerService {
     }
 
 
+    public Customer findCustomerById(String customerId) {
+        return customerRepository.findById(customerId).orElse(null);
+    }
 }

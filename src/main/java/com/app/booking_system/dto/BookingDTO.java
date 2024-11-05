@@ -1,12 +1,12 @@
 package com.app.booking_system.dto;
 
-import com.app.booking_system.entity.Customer;
-import com.app.booking_system.entity.Seat;
+import com.app.booking_system.entity.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,10 +16,14 @@ import java.util.Date;
 public class BookingDTO  {
 
     private Seat seat;
-    private Customer customer;
+    private Bus bus;
+    private Trip trip;
+    private UserCredential customer;
     private Date bookingDateTime;
     private String bookingStatus;
-    private Instant travellingDate;
+    private List<Long> selectedSeats;
+    private Long perSeatAmount;
+    private Long totalPrice;
 
 
 }

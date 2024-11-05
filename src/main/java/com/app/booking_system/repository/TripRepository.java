@@ -12,4 +12,6 @@ public interface TripRepository extends JpaRepository<Trip,String> {
 
 
     boolean existsByPickupPointAndDestinationPointAndPickupTimeBetween(String pickupPoint, String destinationPoint, Instant startOfDay, Instant endOfDay);
+
+    Trip findByPickupPointAndDestinationPointAndPickupTimeBetween(String pickupPoint, String destinationPoint, Instant startOfDay, Instant endOfDay);
 }

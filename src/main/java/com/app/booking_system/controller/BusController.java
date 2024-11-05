@@ -35,4 +35,17 @@ public class BusController {
     }
 
 
+//    @GetMapping("/search")
+//    public Long getAvaliableSeatCount(@RequestParam String id){
+//        return this.busService.getAvailableSeatCount(id);
+//    }
+
+
+
+    @GetMapping("/search")
+    public Long getAvailableSeatCount(
+            @RequestParam Long number,
+            @RequestParam String type) {
+        return this.busService.getAvailableSeatCount(number, type);
+    }
 }
