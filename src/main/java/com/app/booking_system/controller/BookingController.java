@@ -35,6 +35,11 @@ public class BookingController {
         return this.bookingService.createBooking(pickupPoint, destinationPoint, String.valueOf(pickupTime), busNumber, busType, bookedNoOfSeats, perSeatAmount, totalAmount,token);
     }
 
+//    @PostMapping("/delete")
+//    public ResponseDTO deleteBooking(){
+//        return this.bookingService.deleteBooking();
+//    }
+
     @GetMapping("/fetch")
     public ResponseDTO getAllBookingDetail() {
         return this.bookingService.getAllBookingDetail();

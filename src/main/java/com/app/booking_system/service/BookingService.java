@@ -59,7 +59,8 @@ public class BookingService {
 
         Bus bus = busService.findBusId(busNumber, busType);
         if (bus == null) {
-            throw new RuntimeException("Bus not found for the given number and type.");
+            throw new RuntimeException("Bus not found for the gi" +
+                    "ven number and type.");
         }
 
         String userId = tokenProvider.getUserIdFromToken(token);
@@ -74,7 +75,7 @@ public class BookingService {
 
         for (Long seatNumber : bookedNoOfSeats) {
             Seat seat = seatRepository.findByNumberAndBusId(seatNumber, bus.getId());
-            if (seat == null) {
+            if (seat==null) {
                 alreadyBookedSeat.add(seatNumber); // Track unavailable seats
             }
         }

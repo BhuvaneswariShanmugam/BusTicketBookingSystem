@@ -27,7 +27,7 @@ public class Booking {
     private String id;
 
     @ManyToOne
-    @JoinColumn(name="bus_id")
+    @JoinColumn(name="bus_id",nullable = false)
     private Bus bus;
 
     @ManyToOne

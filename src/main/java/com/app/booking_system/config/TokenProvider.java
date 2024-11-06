@@ -17,21 +17,12 @@ public class TokenProvider {
     @Value("${security.jwt.secret-key}")
     private String JWT_SECRET;
 
-//    public String generateAccessToken(UserCredential user) {
-//        try {
-//            Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
-//            return JWT.create().withSubject(user.getUsername()).withClaim("username", user.getUsername())
-//                    .withExpiresAt(genAccessExpirationDate()).sign(algorithm);
-//        } catch (JWTCreationException exception) {
-//            throw new JWTCreationException("Error while generating token", exception);
-//        }
-//    }
 
     public String generateAccessToken(UserCredential user) {
         try {
             String username = user.getUsername();
             String firstName = user.getFirstName();
-            String userId = user.getId(); // Assuming you have a method to get the user's ID
+            String userId = user.getId();
 
             Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
             return JWT.create()
@@ -50,7 +41,7 @@ public class TokenProvider {
     public String getUserIdFromToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
-            return JWT.require(algorithm).build().verify(token).getClaim("UserId").asString(); // Get the user ID claim as String
+            return JWT.require(algorithm).build().verify(token).getClaim("UserId").asString();
         } catch (JWTVerificationException exception) {
             throw new JWTVerificationException("Error while validating token", exception);
         }
