@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface BusRepository extends JpaRepository<Bus,String> {
 
     Bus findByNumberAndType(Long number, String type);
+
+    Bus findByNumber(Long busNumber);
 }
