@@ -89,18 +89,23 @@ public class BookingService {
 
 
 
+    public ResponseDTO createBooking(
+            String pickupPoint, String destinationPoint, String pickupTime, Long busNumber,
+            String busType, List<Long> bookedNoOfSeats, Long perSeatAmount,
+            Long totalAmount, String token) {
 
-
-
-
-    public ResponseDTO createBooking(String pickupPoint, String destinationPoint, String pickupTime, Long busNumber, String busType, List<Long> bookedNoOfSeats, Long perSeatAmount, Long totalAmount, String token) {
         LocalDate pickupDate = LocalDate.parse(pickupTime, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
         Instant startOfDay = pickupDate.atStartOfDay(ZoneId.of("Asia/Kolkata")).toInstant();
         Instant endOfDay = pickupDate.plusDays(1).atStartOfDay(ZoneId.of("Asia/Kolkata")).toInstant();
 
-        Trip trip = tripRepository.findByPickupPointAndDestinationPointAndPickupTimeBetween(pickupPoint, destinationPoint, startOfDay, endOfDay);
-        System.out.println("Trip found: " + (trip != null ? trip.getId() : "No trip found"));
+        Trip trip = tripRepository.findByPickupPointAndDestinationPointAndPickupTimeBetween(
+                pickupPoint, destinationPoint, startOfDay, endOfDay);
+        if (trip == null) {
+            return ResponseDTO.builder()
+                    .message("No trip found for the given parameters.")
+                    .statusCode(404)
+                    .build();
+        }
 
         Bus bus = busService.findBusId(busNumber, busType);
         if (bus == null) {
@@ -108,20 +113,20 @@ public class BookingService {
         }
 
         String userId = tokenProvider.getUserIdFromToken(token);
-        System.out.println("Extracted Customer ID: " + userId);
         UserCredential user = userCredentialRepository.findUserById(userId);
-
         if (user == null) {
             throw new RuntimeException("Customer not found for the given ID.");
         }
 
-        List<Long> alreadyBookedSeat = new ArrayList<>();
-        List<Booking> bookings = new ArrayList<>();
+        List<Long> alreadyBookedSeats = new ArrayList<>();
+        List<Booking> newBookings = new ArrayList<>();
 
         for (Long seatNumber : bookedNoOfSeats) {
-            Seat seat = seatRepository.findByNumberAndBusId(seatNumber, bus.getId());
-            if (seat == null) {
-                alreadyBookedSeat.add(seatNumber);
+            boolean isSeatBooked = bookingRepository.existsByBusIdAndTripIdAndBookedNoOfSeatsIn(
+                    bus.getId(), trip.getId(), List.of(seatNumber));
+
+            if (isSeatBooked) {
+                alreadyBookedSeats.add(seatNumber);
             } else {
                 Booking booking = Booking.builder()
                         .bus(bus)
@@ -131,101 +136,25 @@ public class BookingService {
                         .bookedNoOfSeats(List.of(seatNumber))
                         .totalPrice(perSeatAmount)
                         .build();
-
-                bookings.add(booking);
+                newBookings.add(booking);
             }
         }
-        if (!bookings.isEmpty()) {
-            bookingRepository.saveAll(bookings);
-        }
-        if (!alreadyBookedSeat.isEmpty()) {
+        if (!alreadyBookedSeats.isEmpty()) {
             return ResponseDTO.builder()
-                    .message("Some seats are already booked: " + alreadyBookedSeat)
-                    .data(null)
+                    .message("selected seats are already booked: " + alreadyBookedSeats)
                     .statusCode(400)
                     .build();
         }
+        if (!newBookings.isEmpty()) {
+            bookingRepository.saveAll(newBookings);
+        }
 
         return ResponseDTO.builder()
-                .message(Constants.CREATED)
-                .data(bookings) // Return the created bookings
+                .message("Booking created successfully.")
+                .data(newBookings) // Return the created bookings
                 .statusCode(200)
                 .build();
     }
-
-
-//
-//    public ResponseDTO createBooking(String pickupPoint, String destinationPoint, String pickupTime, Long busNumber, String busType, List<Long> bookedNoOfSeats, Long perSeatAmount, Long totalAmount, String token) {
-//        LocalDate pickupDate = LocalDate.parse(pickupTime, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-//
-//        Instant startOfDay = pickupDate.atStartOfDay(ZoneId.of("Asia/Kolkata")).toInstant();
-//        Instant endOfDay = pickupDate.plusDays(1).atStartOfDay(ZoneId.of("Asia/Kolkata")).toInstant();
-//
-//        Trip trip = tripRepository.findByPickupPointAndDestinationPointAndPickupTimeBetween(pickupPoint, destinationPoint, startOfDay, endOfDay);
-//        System.out.println("Trip found: " + (trip != null ? trip.getId() : "No trip found"));
-//
-//        Bus bus = busService.findBusId(busNumber, busType);
-//        if (bus == null) {
-//            throw new RuntimeException("Bus not found for the given number and type.");
-//        }
-//
-//        String userId = tokenProvider.getUserIdFromToken(token);
-//        System.out.println("Extracted Customer ID: " + userId);
-//        UserCredential user = userCredentialRepository.findUserById(userId);
-//
-//        if (user == null) {
-//            throw new RuntimeException("Customer not found for the given ID.");
-//        }
-//
-//        List<Long> alreadyBookedSeat = new ArrayList<>();
-//        List<Booking> bookings = new ArrayList<>();
-//
-//        for (Long seatNumber : bookedNoOfSeats) {
-//
-//            Booking existingBooking = bookingRepository.findByUserIdAndBusIdAndBookedNoOfSeats(userId, bus.getId(), seatNumber);
-//            if (existingBooking != null) {
-//                alreadyBookedSeat.add(seatNumber);
-//                continue;
-//            }
-//
-//            Seat seat = seatRepository.findByNumberAndBusId(seatNumber, bus.getId());
-//            if (seat == null) {
-//                alreadyBookedSeat.add(seatNumber);
-//            } else {
-//
-//                Booking booking = Booking.builder()
-//                        .bus(bus)
-//                        .trip(trip)
-//                        .user(user)
-//                        .perSeatAmount(perSeatAmount)
-//                        .bookedNoOfSeats(List.of(seatNumber))
-//                        .totalPrice(perSeatAmount)
-//                        .build();
-//
-//                bookings.add(booking);
-//            }
-//        }
-//
-//        if (!bookings.isEmpty()) {
-//            bookingRepository.saveAll(bookings);
-//        }
-//        if (!alreadyBookedSeat.isEmpty()) {
-//            return ResponseDTO.builder()
-//                    .message("Some seats are already booked: " + alreadyBookedSeat)
-//                    .data(null)
-//                    .statusCode(400)
-//                    .build();
-//        }
-//
-//        return ResponseDTO.builder()
-//                .message(Constants.CREATED)
-//                .data(bookings)
-//                .statusCode(200)
-//                .build();
-//    }
-//
-
-
 
 
 //    public ResponseDTO deleteBooking(String token, Long busNumber, List<Long> seatNumbers) {
