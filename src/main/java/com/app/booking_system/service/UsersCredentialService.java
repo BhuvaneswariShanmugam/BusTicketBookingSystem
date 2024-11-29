@@ -66,34 +66,34 @@ public class UsersCredentialService implements  UserDetailsService {
         this.userCredentialRepository.save(userCredential);
 
 
-        if (signUp.getRole().equals("ADMIN")) {
-            Admin admin = Admin.builder()
-                    .firstName(signUp.getFirstName())
-                    .lastName(signUp.getLastName())
-                    .dateOfBirth(signUp.getDateOfBirth())
-                    .email(signUp.getEmail())
-                    .password(encodedPassword)
-                    .gender(signUp.getGender())
-                    .contactNumber(signUp.getContactNumber())
-                    .address(signUp.getAddress())
-                    .termsAccepted(signUp.getTermsAccepted())
-                    .build();
-            return ResponseDTO.builder().statusCode(200).data(this.adminRepository.save(admin)).message(Constants.CREATED).build();
-
-        } else if (signUp.getRole().equals("CUSTOMER")) {
-            Customer customer = Customer.builder()
-                    .firstName(signUp.getFirstName())
-                    .lastName(signUp.getLastName())
-                    .dateOfBirth(signUp.getDateOfBirth())
-                    .email(signUp.getEmail())
-                    .password(encodedPassword)
-                    .gender(signUp.getGender())
-                    .contactNumber(signUp.getContactNumber())
-                    .address(signUp.getAddress())
-                    .termsAccepted(signUp.getTermsAccepted())
-                    .build();
-            return ResponseDTO.builder().statusCode(200).data(this.customerRepository.save(customer)).message(Constants.CREATED).build();
-        }
+//        if (signUp.getRole().equals("ADMIN")) {
+//            Admin admin = Admin.builder()
+//                    .firstName(signUp.getFirstName())
+//                    .lastName(signUp.getLastName())
+//                    .dateOfBirth(signUp.getDateOfBirth())
+//                    .email(signUp.getEmail())
+//                    .password(encodedPassword)
+//                    .gender(signUp.getGender())
+//                    .contactNumber(signUp.getContactNumber())
+//                    .address(signUp.getAddress())
+//                    .termsAccepted(signUp.getTermsAccepted())
+//                    .build();
+//            return ResponseDTO.builder().statusCode(200).data(this.adminRepository.save(admin)).message(Constants.CREATED).build();
+//
+//        } else if (signUp.getRole().equals("CUSTOMER")) {
+//            Customer customer = Customer.builder()
+//                    .firstName(signUp.getFirstName())
+//                    .lastName(signUp.getLastName())
+//                    .dateOfBirth(signUp.getDateOfBirth())
+//                    .email(signUp.getEmail())
+//                    .password(encodedPassword)
+//                    .gender(signUp.getGender())
+//                    .contactNumber(signUp.getContactNumber())
+//                    .address(signUp.getAddress())
+//                    .termsAccepted(signUp.getTermsAccepted())
+//                    .build();
+//            return ResponseDTO.builder().statusCode(200).data(this.customerRepository.save(customer)).message(Constants.CREATED).build();
+//        }
         return ResponseDTO.builder().statusCode(200).message(Constants.NOT_FOUND).build();
     }
 
@@ -107,12 +107,11 @@ public class UsersCredentialService implements  UserDetailsService {
         var accessToken = tokenProvider.generateAccessToken((UserCredential) authorizedUser.getPrincipal());
         var refreshToken = tokenProvider.generateRefreshToken((UserCredential) authorizedUser.getPrincipal());
 
-        // Extracting user ID from the token (ensure your token contains this claim)
         String userId = tokenProvider.getUserIdFromToken(accessToken);
 
         return ResponseDTO.builder()
                 .message(Constants.RETRIEVED)
-                .data(new JwtDto(accessToken, refreshToken)) // Include userId in JwtDto
+                .data(new JwtDto(accessToken, refreshToken))
                 .statusCode(200)
                 .build();
     }
@@ -166,6 +165,33 @@ public class UsersCredentialService implements  UserDetailsService {
                 .data(this.userCredentialRepository.findById(id).orElseThrow(()-> new UsernameNotFoundException("USER ID NOT EXIST")))
                 .statusCode(200)
                 .build();
+    }
+
+
+    public ResponseDTO getUserDetail(String id) {
+        return ResponseDTO.builder()
+                .message(Constants.RETRIEVED)
+                .data(this.userCredentialRepository.findById(id).orElseThrow(()-> new UsernameNotFoundException("USER ID NOT EXIST")))
+                .statusCode(200)
+                .build();
+    }
+
+
+    public ResponseDTO updateUserDetails(String id, UserUpdateDTO userUpdateDTO) {
+        UserCredential user = userCredentialRepository.findById(id).orElse(null);
+
+        if (user == null) {
+            return new ResponseDTO("User not found", null, 404);
+        }
+
+        if (userUpdateDTO.getEmail() != null) user.setEmail(userUpdateDTO.getEmail());
+        if (userUpdateDTO.getAddress() != null) user.setAddress(userUpdateDTO.getAddress());
+        if (userUpdateDTO.getContactNumber() != null) user.setContactNumber(userUpdateDTO.getContactNumber());
+        if (userUpdateDTO.getGender() != null) user.setGender(userUpdateDTO.getGender());
+        if (userUpdateDTO.getDateOfBirth() != null) user.setDateOfBirth(userUpdateDTO.getDateOfBirth());
+
+        userCredentialRepository.save(user);
+        return new ResponseDTO("User details updated successfully", user, 200);
     }
 
 

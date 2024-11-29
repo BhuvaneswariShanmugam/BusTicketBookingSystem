@@ -27,9 +27,6 @@ public class TripService {
     }
 
     public ResponseDTO createTrip(TripDTO tripDTO) {
-//        Organization organization = organizationRepository.findById(tripDTO.getOrganization().getId())
-//                .orElseThrow(() -> new badRequestServiceAlartException(Constants.ORGANIZATION_NOT_FOUND));
-
         Trip savedTrip = Trip.builder()
                 .destinationPoint(tripDTO.getDestinationPoint())
                 .pickupPoint(tripDTO.getPickupPoint())

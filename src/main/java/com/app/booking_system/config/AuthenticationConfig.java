@@ -42,9 +42,9 @@ public class AuthenticationConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        // Allow all routes without requiring authentication
+
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/webjars/**").permitAll()
                         .requestMatchers("/organization/**", "/api/v1/auth/**").permitAll()
                         .requestMatchers("/admin/**").permitAll()
@@ -56,13 +56,13 @@ public class AuthenticationConfig {
                         .requestMatchers("/feedback/**").permitAll()
                         .requestMatchers("/seat/**").permitAll()
                         .requestMatchers("/users/**").permitAll()
-                        .anyRequest().permitAll() // Allow all other requests without requiring authentication
+                        .anyRequest().permitAll()
                 )
                 .sessionManagement(sessionManagement -> sessionManagement
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Stateless session (no session management)
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .authenticationProvider(authenticationProvider()) // Inject the authentication provider
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class); // Add your security filter
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

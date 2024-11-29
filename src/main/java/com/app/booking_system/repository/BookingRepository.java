@@ -21,4 +21,5 @@ public interface BookingRepository extends JpaRepository<Booking,String> {
 
     boolean existsByBusIdAndTripIdAndBookedNoOfSeatsIn(String busId, String tripId, List<Long> seatNumbers);
 
+    List<Booking> findByBusId(String id);
 }

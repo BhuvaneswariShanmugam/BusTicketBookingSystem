@@ -38,22 +38,6 @@ public class BookingService {
     }
 
 
-//    public ResponseDTO getAllBookingDetail(String token){
-//        String userId = tokenProvider.getUserIdFromToken(token);
-//        System.err.println("Extracted Customer ID: " + userId);
-//
-//        UserCredential user = userCredentialRepository.findUserById(userId);
-//        if (user == null) {
-//            throw new RuntimeException("Customer not found for the given ID.");
-//        }
-//        List<Booking> booking=bookingRepository.findAllByUserId(user.getId());
-//        return ResponseDTO.builder()
-//                .message(Constants.RETRIEVED)
-//                .data(booking)
-//                .statusCode(200)
-//                .build();
-//    }
-
 
 
     public List<Map<String, Object>> getAllBookingDetail(String token) {
@@ -100,6 +84,7 @@ public class BookingService {
 
         Trip trip = tripRepository.findByPickupPointAndDestinationPointAndPickupTimeBetween(
                 pickupPoint, destinationPoint, startOfDay, endOfDay);
+        System.err.println("trip id; "+ trip.getId());
         if (trip == null) {
             return ResponseDTO.builder()
                     .message("No trip found for the given parameters.")
@@ -108,12 +93,14 @@ public class BookingService {
         }
 
         Bus bus = busService.findBusId(busNumber, busType);
+        System.err.println("bus id; "+ bus.getId());
         if (bus == null) {
             throw new RuntimeException("Bus not found for the given number and type.");
         }
 
         String userId = tokenProvider.getUserIdFromToken(token);
         UserCredential user = userCredentialRepository.findUserById(userId);
+        System.err.println("user id; "+ user.getId());
         if (user == null) {
             throw new RuntimeException("Customer not found for the given ID.");
         }
@@ -151,52 +138,12 @@ public class BookingService {
 
         return ResponseDTO.builder()
                 .message("Booking created successfully.")
-                .data(newBookings) // Return the created bookings
+                .data(newBookings)
                 .statusCode(200)
                 .build();
     }
 
 
-//    public ResponseDTO deleteBooking(String token, Long busNumber, List<Long> seatNumbers) {
-//
-//        String userId = tokenProvider.getUserIdFromToken(token);
-//        System.out.println("Extracted Customer ID: " + userId);
-//        UserCredential user = userCredentialRepository.findUserById(userId);
-//
-//        if (user == null) {
-//            throw new RuntimeException("Customer not found for the given ID.");
-//        }
-//
-//        String busId = null;
-//        for (Long seatNumber : seatNumbers) {
-//            Seat seat = seatRepository.findByBusNumberAndSeatNumber(busNumber, seatNumber);
-//
-//            if (seat != null) {
-//                Bus bus = seat.getBus();
-//                busId = bus.getId();
-//                System.out.println("Bus ID: " + busId);
-//                Booking booking = bookingRepository.findByBusIdAndUserId(user.getId(), busId);
-//
-//                if (booking != null) {
-//
-//                    bookingRepository.deleteById(booking.getId());
-//                    return ResponseDTO.builder()
-//                            .message(Constants.DELETED)
-//                            .data(booking)
-//                            .statusCode(200)
-//                            .build();
-//                } else {
-//                    throw new RuntimeException("No booking found for user with busId: " + busId);
-//                }
-//            } else {
-//                throw new RuntimeException("Seat not found for bus number: " + busNumber + " and seat number: " + seatNumber);
-//            }
-//        }
-//        return ResponseDTO.builder()
-//                .message("No bookings were deleted.")
-//                .statusCode(404)
-//                .build();
-//    }
 
     public ResponseDTO deleteBooking(String token, Long busNumber, List<Long> bookedNoOfSeats) {
         String userId = tokenProvider.getUserIdFromToken(token);
@@ -277,4 +224,16 @@ public class BookingService {
         }
 
 
+    public ResponseDTO getAvailableSeats(Long number) {
+        Bus bus=busRepository.findByNumber(number);
+        if (bus == null) {
+            throw new RuntimeException("Bus not found for the given number and type.");
+        }
+        List<Booking> booking=bookingRepository.findByBusId(bus.getId());
+        return ResponseDTO.builder()
+                .message(Constants.RETRIEVED)
+                .data(booking)
+                .statusCode(200)
+                .build();
+    }
 }

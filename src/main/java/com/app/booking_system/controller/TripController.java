@@ -28,7 +28,7 @@ public class TripController {
     public boolean searchTrips(@RequestParam String pickupPoint,
                                @RequestParam String destinationPoint,
                                @RequestParam String pickupTime) {
-        // Call the service to handle the search logic and return a boolean result
+
         return tripService.existsTrip(pickupPoint, destinationPoint, pickupTime);
     }
 

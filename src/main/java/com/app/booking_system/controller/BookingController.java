@@ -63,4 +63,10 @@ public class BookingController {
         String token = authorizationHeader.substring(7);
         return this.bookingService.updateBooking(authorizationHeader,pickupPoint,destinationPoint,pickupTime,busNumber,busType,bookedNoOfSeats,perSeatAmount,totalAmount,token);
     }
+
+
+    @GetMapping("/available-seat")
+    public ResponseDTO getAvailableSeats(@RequestParam Long number){
+        return this.bookingService.getAvailableSeats(number);
+    }
 }

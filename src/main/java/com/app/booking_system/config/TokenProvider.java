@@ -29,9 +29,9 @@ public class TokenProvider {
                     .withSubject(username)
                     .withClaim("UserEmail", username)
                     .withIssuedAt(Instant.now())
-                    .withExpiresAt(genAccessExpirationDate())
+                    .withExpiresAt(genAccessExperationDate())
                     .withClaim("FirstName", firstName)
-                    .withClaim("UserId", userId) // Add the user ID claim
+                    .withClaim("UserId", userId)
                     .sign(algorithm);
         } catch (JWTCreationException exception) {
             throw new JWTCreationException("Error while generating access token", exception);
@@ -53,8 +53,12 @@ public class TokenProvider {
     public String validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
-            return JWT.require(algorithm).build().verify(token).getSubject();
+            return JWT.require(algorithm)
+                    .build()
+                    .verify(token)
+                    .getSubject();
         } catch (JWTVerificationException exception) {
+            System.err.println("JWT Verification Exception: " + exception.getMessage());
             throw new JWTVerificationException("Error while validating token", exception);
         }
     }
@@ -69,7 +73,7 @@ public class TokenProvider {
         try {
             Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
             return JWT.create().withSubject(user.getUsername()).withClaim("username", user.getUsername())
-                    .withExpiresAt(genRefreshExpirationDate()).sign(algorithm);
+                    .withExpiresAt(genAccessExperationDate()).sign(algorithm);
         } catch (JWTCreationException exception) {
             throw new JWTCreationException("Error while generating refresh token", exception);
         }
@@ -84,13 +88,14 @@ public class TokenProvider {
         }
     }
 
-    private Instant genAccessExpirationDate() {
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+    public Instant genAccessExperationDate() {
+        return LocalDateTime.now().plusHours(24).toInstant(ZoneOffset.UTC);
     }
 
-    private Instant genRefreshExpirationDate() {
-        return LocalDateTime.now().plusDays(1).toInstant(ZoneOffset.UTC);
-    }
 
+    public Instant genRefreshExperationDate() {
+        return LocalDateTime.now().plusDays(7).toInstant(ZoneOffset.UTC);
+
+    }
 
 }

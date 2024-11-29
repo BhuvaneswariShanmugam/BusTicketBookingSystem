@@ -3,6 +3,7 @@ package com.app.booking_system.controller;
 import com.app.booking_system.dto.ResponseDTO;
 import com.app.booking_system.dto.SigninDTO;
 import com.app.booking_system.dto.SignupDTO;
+import com.app.booking_system.dto.UserUpdateDTO;
 import com.app.booking_system.service.UsersCredentialService;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,12 @@ public class UserCredentialController {
     }
 
     @GetMapping("/get-user-detail/{id}")
-    public ResponseDTO getAllUserDetail(@PathVariable String id){
+    public ResponseDTO getUserDetail(@PathVariable String id){
         return this.usersCredentialService.getAllUserDetail(id);
+    }
+
+    @PutMapping("/update-user/{id}")
+    public ResponseDTO updateUser(@PathVariable String id, @RequestBody UserUpdateDTO userUpdateDTO) {
+        return this.usersCredentialService.updateUserDetails(id, userUpdateDTO);
     }
 }
