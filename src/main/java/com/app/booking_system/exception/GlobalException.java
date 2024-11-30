@@ -36,7 +36,7 @@ public class GlobalException {
     @ExceptionHandler(PasswordNotMatchException.class)
     public ResponseEntity<ErrorResponse> handlePasswordNotMatch(PasswordNotMatchException ex) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);  // Correctly passing both body and status
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
 }
